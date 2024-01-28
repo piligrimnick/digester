@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  database:
+    image: postgres:14-alpine
+    volumes:
+      - ~/pg_data:/var/lib/postgresql/data
+      - ./log:/root/log:delegated
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Digester12
+      POSTGRES_DB: digester_production
+      PSQL_HISTFILE: /root/log/.psql_history
+    command: postgres -c 'max_connections=200'
+
+  x-app: &app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      PORT: 3000
+      RAILS_ENV: production
+      PG_HOST: database
+      PG_USER: postgres
+      PG_PASSWORD: Digester12
+      SECRET_KEY_BASE: 4749de44776b1af7c2a17591c044d473cab9f83895bbbf9f5b1ee667f8e7aa393b7628f130a7787aaaa5899118b1c5a5365688ca999f4b1745e7e555d929e629
+    env_file:
+      - .env
+    entrypoint: ./bin/docker-entrypoint
+    depends_on:
+      - database
+    volumes:
+      - ./:/app:cached
+      - app_bundle:/usr/local/bundle:delegated
+
+  bot:
+    <<: *app
+    restart: always
+    command: ./bin/bot
+
+volumes:
+  app_bundle:

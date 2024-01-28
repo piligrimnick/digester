@@ -79,6 +79,7 @@ test:
 #
 production:
   <<: *default
+  host: <%= ENV["PG_HOST"] %>
   database: digester_production
-  username: digester
-  password: <%= ENV["DIGESTER_DATABASE_PASSWORD"] %>
+  username: postgres
+  password: <%= ENV["PG_PASSWORD"] %>
