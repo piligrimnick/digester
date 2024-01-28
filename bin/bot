@@ -5,24 +5,47 @@ require 'telegram/bot'
 
 token = Rails.application.credentials.telegram[:token]
 
-Telegram::Bot::Client.run(token, logger: Rails.logger) do |bot|
+begin
+  bot = Telegram::Bot::Client.new(token, logger: Logger.new($stdout))
   bot.logger.info('Bot has been started')
 
   bot.listen do |message|
-    case message.text
-    when '/start'
-      bot.api.send_message(chat_id: message.chat.id, text: "Hello, #{message.from.first_name}")
-    when '/stop'
-      bot.api.send_message(chat_id: message.chat.id, text: "Bye, #{message.from.first_name}")
-    when /\/get/
+    puts message.inspect
+
+    chat = Chat.find_or_create_by(chat_id: message.chat.id, type: message.chat.type) do |chat|
+      chat.title = message.chat.title
+    end
+    next if chat.type == "private" && !message.is_a?(Telegram::Bot::Types::ChatMemberUpdated)
+
+    api_user = message.from
+    user = User.create_with(api_user.to_h.slice(*%i[is_bot first_name last_name username])).find_or_create_by(telegam_user_id: api_user.id)
+
+    case message
+    when Telegram::Bot::Types::ChatMemberUpdated
+      # blocking and unblocking here
+      next unless message.chat.type == "private"
+
+      if message.new_chat_member&.is_a?(Telegram::Bot::Types::ChatMemberBanned)
+        user.update(blocked: true)
+      elsif message.new_chat_member&.is_a?(TeleTelegram::Bot::Types::ChatMemberMember)
+        user.update(blocked: false)
+      end
     else
-      bot.api.send_message(
-        chat_id: message.chat.id,
-        reply_to_message_id: message.message_id,
-        text: "test"
-      )
+      next if user.blocked
+
+      if message.text == "digest"
+        report = Report.last
+        bot.api.send_message(chat_id: chat.chat_id, text: report.render, parse_mode: "MarkdownV2")
+      else
+        # store statistic
+        Report.find_each do |report|
+          message_counter = report.message_counters.find_or_create_by(user_id: user.id, date: Time.at(message.date).to_date)
+          message_counter.value += 1
+          message_counter.save
+        end
+      end
     end
   end
-  rescue Telegram::Bot::Exceptions::Base => e
-    puts e
+rescue Telegram::Bot::Exceptions::Base => e
+  puts e
 end
