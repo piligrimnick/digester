@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+require_relative '../config/environment'
+
+require 'telegram/bot'
+
+token = Rails.application.credentials.telegram[:token]
+
+Telegram::Bot::Client.run(token, logger: Rails.logger) do |bot|
+  bot.logger.info('Bot has been started')
+
+  bot.listen do |message|
+    case message.text
+    when '/start'
+      bot.api.send_message(chat_id: message.chat.id, text: "Hello, #{message.from.first_name}")
+    when '/stop'
+      bot.api.send_message(chat_id: message.chat.id, text: "Bye, #{message.from.first_name}")
+    when /\/get/
+    else
+      bot.api.send_message(
+        chat_id: message.chat.id,
+        reply_to_message_id: message.message_id,
+        text: "test"
+      )
+    end
+  end
+  rescue Telegram::Bot::Exceptions::Base => e
+    puts e
+end
