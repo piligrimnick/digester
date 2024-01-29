@@ -32,8 +32,9 @@ begin
       next if user.blocked
 
       if message.text == "digest"
-        report = Report.last
-        bot.api.send_message(chat_id: chat.chat_id, text: report.render, parse_mode: "MarkdownV2")
+        chat.reports.each do |report|
+          bot.api.send_message(chat_id: chat.chat_id, text: report.render, parse_mode: "MarkdownV2")
+        end
       else
         # store statistic
         Report.find_each do |report|
