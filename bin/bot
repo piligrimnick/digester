@@ -31,7 +31,7 @@ begin
     else
       next if user.blocked
 
-      if message.text == "digest"
+      if message.text == "digest" && user.id == 1
         chat.reports.each do |report|
           bot.api.send_message(chat_id: chat.chat_id, text: report.render, parse_mode: "MarkdownV2")
         end

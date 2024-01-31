@@ -19,8 +19,9 @@ class Report < ApplicationRecord
 
 
   def render
-    total = message_counters.sum(:value)
-    top_5 = message_counters.where(date: Time.now.to_date).order(value: :desc).first(5)
+    scope = message_counters.where(date: Time.now.to_date)
+    total = scope.sum(:value)
+    top_5 = scope.order(value: :desc).first(5)
 
     rendered_top = top_5.map.with_index do |c, i|
       "#{i+1}\\. [#{c.user.first_name} #{c.user.last_name}](tg://user?id=#{c.user.telegam_user_id}) \\- *#{c.value}*"
