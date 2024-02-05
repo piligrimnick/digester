@@ -14,26 +14,26 @@
 #  index_reports_on_chat_id  (chat_id)
 #
 class Report < ApplicationRecord
+  self.inheritance_column = :period
+
   belongs_to :chat
   has_many :message_counters
 
-
   def render
-    scope = message_counters.where(date: Time.now.to_date)
-    total = scope.sum(:value)
-    top_5 = scope.order(value: :desc).first(5)
+    raise NotImplementedError
+  end
 
-    rendered_top = top_5.map.with_index do |c, i|
-      "#{i+1}\\. [#{c.user.first_name} #{c.user.last_name}](tg://user?id=#{c.user.telegam_user_id}) \\- *#{c.value}*"
-    end.join("\n")
+  def self.sti_class_for(period_name)
+    case period_name
+    when "daily" then DailyReport
+    when "weekly" then WeeklyReport
+    end
+  end
 
-    <<~HEREDOC
-      *Сегодня наспамили: #{total}*
-
-      Больше всех старались:
-      #{rendered_top}
-
-      Увидимся завтра ;\\)
-    HEREDOC
+  def self.sti_name
+    case name
+    when "DailyReport" then "daily"
+    when "WeeklyReport" then "weekly"
+    end
   end
 end

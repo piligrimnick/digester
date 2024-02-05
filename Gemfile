@@ -64,3 +64,5 @@ gem "telegram-bot-ruby", "~> 2.0"
 gem "sidekiq", "~> 7.2"
 
 gem "sidekiq-scheduler", "~> 5.0"
+
+gem "whenever", "~> 1.0"

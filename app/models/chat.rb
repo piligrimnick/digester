@@ -17,4 +17,6 @@ class Chat < ApplicationRecord
   self.inheritance_column = :_type_disabled # https://apidock.com/rails/ActiveRecord/Base/inheritance_column/class
 
   has_many :reports
+  has_many :daily_reports, -> { where(period: :daily) }
+  has_many :weekly_reports, -> { where(period: :weekly) }
 end
