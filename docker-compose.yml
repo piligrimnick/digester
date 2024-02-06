@@ -29,8 +29,7 @@ services:
     depends_on:
       - database
     volumes:
-      - ./:/app:cached
-      - app_bundle:/usr/local/bundle:delegated
+      - ./:/app
 
   bot:
     <<: *app
