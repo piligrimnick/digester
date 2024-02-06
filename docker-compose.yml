@@ -18,7 +18,7 @@ services:
       dockerfile: ./Dockerfile
     environment:
       PORT: 3000
-      RAILS_ENV: production
+      RAILS_ENV: development
       PG_HOST: database
       PG_USER: postgres
       PG_PASSWORD: Digester12
@@ -36,6 +36,11 @@ services:
     <<: *app
     restart: always
     command: ./bin/bot
+  
+  jobs:
+    <<: *app
+    restart: always
+    command: clockwork clock.rb
 
 volumes:
   app_bundle:
