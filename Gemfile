@@ -47,6 +47,8 @@ gem "dry-struct"
 gem "telegram-bot-ruby", "~> 2.0"
 gem "clockwork", "~> 3.0"
 
+gem "nokogiri", ">= 1.16.2"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows]
