@@ -19,7 +19,12 @@ module Entrypoints
           user.update(blocked: false)
         end
       else
-        # do nothing
+        return unless message.respond_to?(:text)
+        case message.text
+        when "ping" then bot.api.send_message(chat_id: chat.chat_id, text: "pong")
+        else
+          # do nothing
+        end
       end
     end
   end
