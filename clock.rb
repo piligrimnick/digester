@@ -2,7 +2,6 @@ require "clockwork"
 require_relative "config/boot"
 require_relative "config/environment"
 
-
 module Clockwork
   configure do |config|
     config[:sleep_timeout] = 60

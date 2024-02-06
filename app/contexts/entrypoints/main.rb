@@ -5,7 +5,7 @@ module Entrypoints
     ENTRYPOINTS = {
       private: Entrypoints::Private,
       group: Entrypoints::Group,
-      supergroup: Entrypoints::Group,
+      supergroup: Entrypoints::Group
     }.freeze
 
     attr_reader :bot

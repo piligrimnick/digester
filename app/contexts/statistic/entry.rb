@@ -1,6 +1,5 @@
 module Statistic
   class Entry
-
     attr_reader :chat, :user, :message
 
     def initialize(chat, user, message)

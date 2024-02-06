@@ -1,6 +1,5 @@
 module Entrypoints
   class Group
-
     attr_reader :bot, :chat, :user
 
     def initialize(bot, chat, user)
