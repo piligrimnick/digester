@@ -18,7 +18,7 @@ services:
       dockerfile: ./Dockerfile
     environment:
       PORT: 3000
-      RAILS_ENV: development
+      RAILS_ENV: production
       PG_HOST: database
       PG_USER: postgres
       PG_PASSWORD: Digester12
