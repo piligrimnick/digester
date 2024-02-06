@@ -39,7 +39,7 @@ services:
   jobs:
     <<: *app
     restart: always
-    command: clockwork clock.rb
+    command: bundle exec clockwork clock.rb
 
 volumes:
   app_bundle:
