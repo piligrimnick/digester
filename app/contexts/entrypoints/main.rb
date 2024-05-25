@@ -36,6 +36,10 @@ module Entrypoints
       user = User.create_with(t_user.to_h.slice(*%i[is_bot first_name last_name username]))
         .find_or_create_by(telegam_user_id: t_user.id)
 
+      Thread.new do
+        user.update(t_user.to_h.slice(*%i[first_name last_name username]))
+      end
+
       Success(user)
     end
   end

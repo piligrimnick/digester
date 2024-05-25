@@ -20,7 +20,7 @@ class DailyReport < Report
     top_10 = scope.order(value: :desc).first(10)
 
     rendered_top = top_10.map.with_index do |c, i|
-      "#{i + 1}\\. [#{c.user.first_name} #{c.user.last_name}](tg://user?id=#{c.user.telegam_user_id}) \\- *#{c.value}*"
+      "#{i + 1}\\. [#{[c.user.first_name, c.user.last_name].compact.join(" ")}](tg://user?id=#{c.user.telegam_user_id}) \\- *#{c.value}*"
     end.join("\n")
 
     counter = "Написанные и прочитанные сообщения за вчера: #{total}"
