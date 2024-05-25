@@ -13,14 +13,14 @@ module Entrypoints
 
       Statistic::Entry.new(chat, user, message).count
 
-      # return unless message.respond_to?(:text)
+      return unless message.respond_to?(:text)
 
-      # case message.text
-      # in /налог/
-      #   # bot.send_message
-      # else
-      #   # do nothing
-      # end
+      case message.text
+      in /налог|нолог/
+        Messages::TaxReply.new(message).send if rand < 0.3
+      else
+        # do nothing
+      end
     end
   end
 end
