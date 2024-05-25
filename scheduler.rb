@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'rufus/scheduler'
 require_relative "config/boot"
 require_relative "config/environment"
+require "rufus/scheduler"
 
 ENV['TZ'] = "Europe/Madrid"
 
