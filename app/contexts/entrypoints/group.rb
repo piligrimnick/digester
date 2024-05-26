@@ -16,8 +16,8 @@ module Entrypoints
       return unless message.respond_to?(:text)
 
       case message.text
-      in /налог|нолог/
-        Messages::TaxReply.new(message).send if rand < 0.3
+      in /(?<![а-яА-Я])[нН][ао]лог(ов(ый|ая|ое|ые|ого|ому|ыми|ых)?|и|а|у|е|ом)?(?![а-яА-Я])/
+        Messages::TaxReply.new(message).send if rand < 0.15
       else
         # do nothing
       end
