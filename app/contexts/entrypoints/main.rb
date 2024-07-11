@@ -15,6 +15,9 @@ module Entrypoints
     end
 
     def handle(message)
+      return unless message.respond_to?(:chat)
+      return unless message.respond_to?(:from)
+
       t_chat, t_user = message.chat, message.from
 
       chat = yield retrieve_chat(t_chat)
